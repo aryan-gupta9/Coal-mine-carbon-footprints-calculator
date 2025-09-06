@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Coal Mine Carbon Footprint Calculator - Ministry of Coal</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="header-fix.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- Leaflet CSS for map -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-XQoYMqMTK8LpLeA/0kqf0p5QbQ0wVv4hKkM6bM0CkEw=" crossorigin=""/>
+
+        <style>
+            /* Emergency inline styles to ensure header text visibility */
+            .main-header {
+                background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+            }
+            .header-stats,
+            .header-stats span,
+            .stat-item,
+            .stat-item span,
+            .stat-item strong {
+                color: white !important;
+                opacity: 1 !important;
+            }
+            .header-stats i {
+                color: #27ae60 !important;
+            }
+
+            /* Map styles: use responsive full India map for the Mine Map section */
+            #india-map {
+                width: 100%;
+                /* responsive height: min 40vh up to 80vh depending on viewport */
+                min-height: 50vh;
+                max-height: 80vh;
+                height: clamp(360px, 55vh, 760px);
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                overflow: hidden;
+            }
+
+            /* side list responsiveness */
+            .map-panel { gap: 24px; align-items: flex-start; }
+            .map-column { flex: 1 1 70%; min-width: 260px; }
+            .list-column { flex: 1 1 30%; min-width: 200px; max-height: clamp(220px,55vh,720px); overflow:auto; background:#fff; padding:12px; border-radius:8px; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
+            .map-panel .list-column h4 { margin-top:0; }
+            @media (max-width: 900px) {
+                .map-panel { flex-direction: column; }
+                .map-column { order: 1; width: 100%; }
+                .list-column { order: 2; width: 100%; max-height: 40vh; }
+            }
+        </style>
+    </head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjMDA2NjMzIi8+CjxwYXRoIGQ9Ik0yNSAxMEwyMCAyNUgyNUwzMCAyNVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xNSAzNUwyNSAyNUwzNSAzNVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="Ministry of Coal Logo">
+                    <div class="title-section">
+                        <h1>Coal Mine Carbon Footprint Calculator</h1>
+                        <p>Central Mine Planning & Design Institute Limited</p>
+                    </div>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-industry"></i>
+                        <span>Total Mines Assessed: <strong id="total-mines">0</strong></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-leaf"></i>
+                        <span>CO₂ Reduction Target: <strong>Net Zero by 2070</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#dashboard" class="nav-link active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#emission-calculator" class="nav-link" data-section="emission-calculator"><i class="fas fa-calculator"></i> Emission Calculator</a></li>
+                <li><a href="#carbon-sinks" class="nav-link" data-section="carbon-sinks"><i class="fas fa-tree"></i> Carbon Sinks</a></li>
+                <li><a href="#neutrality-pathways" class="nav-link" data-section="neutrality-pathways"><i class="fas fa-route"></i> Neutrality Pathways</a></li>
+                <li><a href="#visualization" class="nav-link" data-section="visualization"><i class="fas fa-chart-line"></i> Data Visualization</a></li>
+                <li><a href="#mine-map" class="nav-link" data-section="mine-map"><i class="fas fa-map-marker-alt"></i> Mine Map</a></li>
+                <li><a href="#smart-calculator" class="nav-link" data-section="smart-calculator"><i class="fas fa-brain"></i> Smart Calculator</a></li>
+                <li><a href="#reports" class="nav-link" data-section="reports"><i class="fas fa-file-alt"></i> Reports</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h2>
+                    <p>Monitor your mine's carbon footprint and progress towards carbon neutrality</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-smoke"></i> Total Emissions</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="metric-value" id="total-emissions">0</div>
+                            <div class="metric-unit">tonnes CO₂eq/year</div>
+                            <div class="metric-change positive" id="emissions-change">+0%</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-user"></i> Per Capita Emissions</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="metric-value" id="per-capita-emissions">0</div>
+                            <div class="metric-unit">tonnes CO₂eq/person/year</div>
+                            <div class="metric-change negative" id="per-capita-change">-0%</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-tree"></i> Carbon Sinks</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="metric-value" id="total-sinks">0</div>
+                            <div class="metric-unit">tonnes CO₂eq/year</div>
+                            <div class="metric-change positive" id="sinks-change">+0%</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-balance-scale"></i> Net Emissions</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="metric-value" id="net-emissions">0</div>
+                            <div class="metric-unit">tonnes CO₂eq/year</div>
+                            <div class="neutrality-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="neutrality-progress"></div>
+                                </div>
+                                <span id="neutrality-percentage">0% to neutrality</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-charts">
+                    <div class="chart-container">
+                        <h3>Emission Sources Breakdown</h3>
+                        <canvas id="emission-breakdown-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Monthly Emission Trends</h3>
+                        <canvas id="emission-trends-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Dashboard no longer contains an embedded map. Use the dedicated 'Mine Map' menu item for full India map and live locations. -->
+            </section>
+
+            <!-- Emission Calculator Section -->
+            <section id="emission-calculator" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-calculator"></i> Emission Calculator</h2>
+                    <p>Calculate carbon emissions from various mining activities</p>
+                </div>
+
+                <div class="calculator-container">
+                    <div class="mine-info-form">
+                        <h3>Mine Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="mine-name">Mine Name</label>
+                                <input type="text" id="mine-name" placeholder="Enter mine name">
+                            </div>
+                            <div class="form-group">
+                                <label for="mine-type">Mine Type</label>
+                                <select id="mine-type">
+                                    <option value="">Select mine type</option>
+                                    <option value="open-cast">Open Cast</option>
+                                    <option value="underground">Underground</option>
+                                    <option value="mixed">Mixed (Open Cast + Underground)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="mine-capacity">Annual Production Capacity (Million Tonnes)</label>
+                                <input type="number" id="mine-capacity" placeholder="Enter capacity" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="workforce">Total Workforce</label>
+                                <input type="number" id="workforce" placeholder="Number of employees">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <select id="state">
+                                    <option value="">Select state</option>
+                                    <option value="jharkhand">Jharkhand</option>
+                                    <option value="chhattisgarh">Chhattisgarh</option>
+                                    <option value="odisha">Odisha</option>
+                                    <option value="telangana">Telangana</option>
+                                    <option value="west-bengal">West Bengal</option>
+                                    <option value="bihar">Bihar</option>
+                                    <option value="maharashtra">Maharashtra</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="mine-address">Mine Address/Location</label>
+                                <input type="text" id="mine-address" placeholder="Enter mine address or coordinates">
+                            </div>
+                            <div class="form-group">
+                                <label for="mine-latitude">Latitude (optional)</label>
+                                <input type="number" id="mine-latitude" placeholder="e.g., 23.7956" step="0.0001">
+                            </div>
+                            <div class="form-group">
+                                <label for="mine-longitude">Longitude (optional)</label>
+                                <input type="number" id="mine-longitude" placeholder="e.g., 86.4303" step="0.0001">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="emissions-calculator">
+                        <h3>Activity-wise Emission Calculation</h3>
+                        
+                        <div class="activity-section">
+                            <h4><i class="fas fa-truck"></i> Transportation & Logistics</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="diesel-consumption">Diesel Consumption (Liters/month)</label>
+                                    <input type="number" id="diesel-consumption" placeholder="Enter diesel consumption" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="transport-distance">Average Transport Distance (km/day)</label>
+                                    <input type="number" id="transport-distance" placeholder="Enter distance" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="vehicle-count">Number of Vehicles</label>
+                                    <input type="number" id="vehicle-count" placeholder="Enter vehicle count">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="activity-section">
+                            <h4><i class="fas fa-cogs"></i> Equipment & Machinery</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="excavator-hours">Excavator Operating Hours/month</label>
+                                    <input type="number" id="excavator-hours" placeholder="Enter hours" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="drill-hours">Drilling Equipment Hours/month</label>
+                                    <input type="number" id="drill-hours" placeholder="Enter hours" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="crusher-hours">Crusher Operating Hours/month</label>
+                                    <input type="number" id="crusher-hours" placeholder="Enter hours" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="activity-section">
+                            <h4><i class="fas fa-bolt"></i> Energy Consumption</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="electricity-consumption">Electricity Consumption (kWh/month)</label>
+                                    <input type="number" id="electricity-consumption" placeholder="Enter electricity consumption" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="coal-processing">Coal Processing (tonnes/month)</label>
+                                    <input type="number" id="coal-processing" placeholder="Enter processing volume" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="methane-emission">Methane Emission Factor</label>
+                                    <select id="methane-emission">
+                                        <option value="low">Low (0.5 m³/tonne)</option>
+                                        <option value="medium">Medium (1.0 m³/tonne)</option>
+                                        <option value="high">High (2.0 m³/tonne)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="calculate-section">
+                            <button type="button" id="calculate-emissions" class="btn btn-primary">
+                                <i class="fas fa-calculator"></i> Calculate Emissions
+                            </button>
+                            <button type="button" id="reset-calculator" class="btn btn-secondary">
+                                <i class="fas fa-redo"></i> Reset Calculator
+                            </button>
+                        </div>
+
+                        <div class="results-section" id="emission-results" style="display: none;">
+                            <h3>Calculation Results</h3>
+                            <div class="results-grid">
+                                <div class="result-card">
+                                    <h4>Transportation Emissions</h4>
+                                    <div class="result-value" id="transport-emissions">0</div>
+                                    <div class="result-unit">tonnes CO₂eq/year</div>
+                                </div>
+                                <div class="result-card">
+                                    <h4>Equipment Emissions</h4>
+                                    <div class="result-value" id="equipment-emissions">0</div>
+                                    <div class="result-unit">tonnes CO₂eq/year</div>
+                                </div>
+                                <div class="result-card">
+                                    <h4>Energy Emissions</h4>
+                                    <div class="result-value" id="energy-emissions">0</div>
+                                    <div class="result-unit">tonnes CO₂eq/year</div>
+                                </div>
+                                <div class="result-card highlight">
+                                    <h4>Total Annual Emissions</h4>
+                                    <div class="result-value" id="total-calculated-emissions">0</div>
+                                    <div class="result-unit">tonnes CO₂eq/year</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Carbon Sinks Section -->
+            <section id="carbon-sinks" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-tree"></i> Carbon Sinks Estimation</h2>
+                    <p>Evaluate existing carbon sinks and plan afforestation for carbon offsetting</p>
+                </div>
+
+                <div class="sinks-container">
+                    <div class="existing-sinks">
+                        <h3>Existing Carbon Sinks</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="forest-area">Forest Area (hectares)</label>
+                                <input type="number" id="forest-area" placeholder="Enter forest area" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="plantation-area">Plantation Area (hectares)</label>
+                                <input type="number" id="plantation-area" placeholder="Enter plantation area" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="tree-age">Average Tree Age (years)</label>
+                                <input type="number" id="tree-age" placeholder="Enter average age">
+                            </div>
+                            <div class="form-group">
+                                <label for="tree-species">Dominant Tree Species</label>
+                                <select id="tree-species">
+                                    <option value="">Select species</option>
+                                    <option value="eucalyptus">Eucalyptus</option>
+                                    <option value="teak">Teak</option>
+                                    <option value="sal">Sal</option>
+                                    <option value="bamboo">Bamboo</option>
+                                    <option value="mixed">Mixed Species</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="button" id="calculate-sinks" class="btn btn-primary">
+                            <i class="fas fa-leaf"></i> Calculate Carbon Sinks
+                        </button>
+                    </div>
+
+                    <div class="afforestation-planning">
+                        <h3>Afforestation Planning for Carbon Offsetting</h3>
+                        <div id="sinks-results" style="display: none;">
+                            <div class="results-grid">
+                                <div class="result-card">
+                                    <h4>Current Carbon Sequestration</h4>
+                                    <div class="result-value" id="current-sequestration">0</div>
+                                    <div class="result-unit">tonnes CO₂/year</div>
+                                </div>
+                                <div class="result-card">
+                                    <h4>Required Additional Sequestration</h4>
+                                    <div class="result-value" id="required-sequestration">0</div>
+                                    <div class="result-unit">tonnes CO₂/year</div>
+                                </div>
+                                <div class="result-card highlight">
+                                    <h4>Additional Trees Needed</h4>
+                                    <div class="result-value" id="trees-needed">0</div>
+                                    <div class="result-unit">trees</div>
+                                </div>
+                                <div class="result-card highlight">
+                                    <h4>Additional Land Required</h4>
+                                    <div class="result-value" id="land-required">0</div>
+                                    <div class="result-unit">hectares</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="state-afforestation-rates">
+                            <h4>State-specific Afforestation Rates (per hectare/year)</h4>
+                            <div class="rates-grid">
+                                <div class="rate-item">
+                                    <strong>Jharkhand:</strong> 12-15 tonnes CO₂
+                                </div>
+                                <div class="rate-item">
+                                    <strong>Chhattisgarh:</strong> 10-14 tonnes CO₂
+                                </div>
+                                <div class="rate-item">
+                                    <strong>Odisha:</strong> 11-16 tonnes CO₂
+                                </div>
+                                <div class="rate-item">
+                                    <strong>West Bengal:</strong> 13-17 tonnes CO₂
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Neutrality Pathways Section -->
+            <section id="neutrality-pathways" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-route"></i> Carbon Neutrality Pathways</h2>
+                    <p>Simulate different emission reduction strategies and pathways to achieve carbon neutrality</p>
+                </div>
+
+                <div class="pathways-container">
+                    <div class="pathway-simulator">
+                        <h3>Emission Reduction Strategies Simulator</h3>
+                        
+                        <div class="strategy-section">
+                            <h4><i class="fas fa-car-battery"></i> Clean Technologies Adoption</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="electric-vehicles">Electric Vehicles (% of fleet)</label>
+                                    <input type="range" id="electric-vehicles" min="0" max="100" value="0" step="5">
+                                    <span class="range-value" id="ev-value">0%</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="methane-capture">Methane Capture Systems (% efficiency)</label>
+                                    <input type="range" id="methane-capture" min="0" max="90" value="0" step="5">
+                                    <span class="range-value" id="methane-value">0%</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="energy-efficiency">Energy Efficiency Improvements (%)</label>
+                                    <input type="range" id="energy-efficiency" min="0" max="50" value="0" step="5">
+                                    <span class="range-value" id="efficiency-value">0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><i class="fas fa-solar-panel"></i> Renewable Energy Integration</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="solar-capacity">Solar Power Capacity (MW)</label>
+                                    <input type="number" id="solar-capacity" placeholder="Enter capacity" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="wind-capacity">Wind Power Capacity (MW)</label>
+                                    <input type="number" id="wind-capacity" placeholder="Enter capacity" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="renewable-percentage">Renewable Energy (% of total consumption)</label>
+                                    <input type="range" id="renewable-percentage" min="0" max="100" value="0" step="5">
+                                    <span class="range-value" id="renewable-value">0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><i class="fas fa-coins"></i> Carbon Credits & Offsetting</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="carbon-credits">Carbon Credits to Purchase (tonnes CO₂eq)</label>
+                                    <input type="number" id="carbon-credits" placeholder="Enter credits" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="credit-price">Carbon Credit Price (₹/tonne CO₂eq)</label>
+                                    <input type="number" id="credit-price" placeholder="Current: ₹800-1200" value="1000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="simulate-section">
+                            <button type="button" id="simulate-pathways" class="btn btn-primary">
+                                <i class="fas fa-play"></i> Simulate Pathways
+                            </button>
+                            <button type="button" id="reset-simulation" class="btn btn-secondary">
+                                <i class="fas fa-undo"></i> Reset Simulation
+                            </button>
+                        </div>
+
+                        <div class="simulation-results" id="pathway-results" style="display: none;">
+                            <h3>Simulation Results</h3>
+                            <div class="results-grid">
+                                <div class="result-card">
+                                    <h4>Emission Reduction</h4>
+                                    <div class="result-value" id="emission-reduction">0</div>
+                                    <div class="result-unit">tonnes CO₂eq/year</div>
+                                    <div class="result-percentage" id="reduction-percentage">0%</div>
+                                </div>
+                                <div class="result-card">
+                                    <h4>Implementation Cost</h4>
+                                    <div class="result-value" id="implementation-cost">₹0</div>
+                                    <div class="result-unit">Crores</div>
+                                </div>
+                                <div class="result-card">
+                                    <h4>Annual Carbon Credit Earnings</h4>
+                                    <div class="result-value" id="credit-earnings">₹0</div>
+                                    <div class="result-unit">Lakhs/year</div>
+                                </div>
+                                <div class="result-card highlight">
+                                    <h4>Time to Carbon Neutrality</h4>
+                                    <div class="result-value" id="neutrality-timeline">∞</div>
+                                    <div class="result-unit">years</div>
+                                </div>
+                            </div>
+                            
+                            <div class="pathway-comparison">
+                                <canvas id="pathway-comparison-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Data Visualization Section -->
+            <section id="visualization" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-line"></i> Data Visualization</h2>
+                    <p>Visual analysis of emission trends, reduction strategies, and progress tracking</p>
+                </div>
+
+                <div class="visualization-container">
+                    <div class="chart-controls">
+                        <div class="form-group">
+                            <label for="chart-type">Chart Type</label>
+                            <select id="chart-type">
+                                <option value="emissions-trend">Emissions Trend</option>
+                                <option value="activity-breakdown">Activity Breakdown</option>
+                                <option value="reduction-progress">Reduction Progress</option>
+                                <option value="comparative-analysis">Comparative Analysis</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="time-period">Time Period</label>
+                            <select id="time-period">
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                        <button type="button" id="update-charts" class="btn btn-primary">
+                            <i class="fas fa-sync-alt"></i> Update Charts
+                        </button>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-container large">
+                            <h3>Primary Analysis Chart</h3>
+                            <canvas id="primary-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Emission Intensity</h3>
+                            <canvas id="intensity-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Progress Tracking</h3>
+                            <canvas id="progress-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mine Map Section (added) -->
+            <section id="mine-map" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-map-marker-alt"></i> Mine Map</h2>
+                    <p>Map of India showing mine locations and basic mine data. Click a list item to focus a mine.</p>
+                </div>
+
+                <div class="map-panel container">
+                    <div class="map-column">
+                        <div id="india-map" aria-label="Map of India showing mine locations"></div>
+                    </div>
+                    <div class="list-column" id="mine-list" aria-live="polite">
+                        <h4>Mine Locations</h4>
+                        <div id="mine-items">
+                            <!-- Filled by script -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- end mine map section -->
+
+            <!-- Smart Calculator Section -->
+            <section id="smart-calculator" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-brain"></i> Smart Calculator & AI Recommendations</h2>
+                    <p>Get intelligent recommendations and automated solutions for optimal carbon reduction strategies</p>
+                </div>
+
+                <div class="smart-calculator-container">
+                    <div class="ai-analysis-card">
+                        <h3><i class="fas fa-robot"></i> AI-Powered Analysis</h3>
+                        <div class="analysis-grid">
+                            <div class="analysis-item">
+                                <h4>Current Status Assessment</h4>
+                                <div id="smart-status" class="analysis-content">
+                                    <div class="status-indicator loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="analysis-item">
+                                <h4>Efficiency Score</h4>
+                                <div id="efficiency-score" class="analysis-content">
+                                    <div class="score-display">
+                                        <div class="score-circle">
+                                            <div class="score-value" id="efficiency-value">--</div>
+                                            <div class="score-label">out of 100</div>
+                                        </div>
+                                        <div class="score-breakdown" id="score-breakdown">
+                                            <div class="score-item">
+                                                <span class="score-category">Transportation</span>
+                                                <div class="score-bar">
+                                                    <div class="score-fill transport-score"></div>
+                                                </div>
+                                                <span class="score-points">0/25</span>
+                                            </div>
+                                            <div class="score-item">
+                                                <span class="score-category">Equipment</span>
+                                                <div class="score-bar">
+                                                    <div class="score-fill equipment-score"></div>
+                                                </div>
+                                                <span class="score-points">0/25</span>
+                                            </div>
+                                            <div class="score-item">
+                                                <span class="score-category">Energy</span>
+                                                <div class="score-bar">
+                                                    <div class="score-fill energy-score"></div>
+                                                </div>
+                                                <span class="score-points">0/25</span>
+                                            </div>
+                                            <div class="score-item">
+                                                <span class="score-category">Carbon Sinks</span>
+                                                <div class="score-bar">
+                                                    <div class="score-fill sinks-score"></div>
+                                                </div>
+                                                <span class="score-points">0/25</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ai-actions">
+                            <button type="button" id="analyze-mine" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Analyze My Mine
+                            </button>
+                            <button type="button" id="get-recommendations" class="btn btn-secondary">
+                                <i class="fas fa-lightbulb"></i> Get Smart Recommendations
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="recommendations-panel" id="recommendations-panel" style="display: none;">
+                        <h3><i class="fas fa-lightbulb"></i> Intelligent Recommendations</h3>
+                        <div class="recommendations-grid" id="recommendations-grid">
+                            <!-- Recommendations will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="optimization-solver">
+                        <h3><i class="fas fa-cogs"></i> Automated Optimization Solver</h3>
+                        <div class="solver-options">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="optimization-goal">Optimization Goal</label>
+                                    <select id="optimization-goal">
+                                        <option value="cost-effective">Most Cost-Effective Reduction</option>
+                                        <option value="maximum-reduction">Maximum Emission Reduction</option>
+                                        <option value="fastest-neutrality">Fastest Path to Neutrality</option>
+                                        <option value="balanced">Balanced Approach</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="budget-constraint">Budget Constraint (Crores ₹)</label>
+                                    <input type="number" id="budget-constraint" placeholder="Enter available budget" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="timeline-constraint">Timeline (Years)</label>
+                                    <input type="number" id="timeline-constraint" placeholder="Target timeline" min="1" max="50">
+                                </div>
+                                <div class="form-group">
+                                    <label for="priority-areas">Priority Areas</label>
+                                    <select id="priority-areas" multiple>
+                                        <option value="transportation">Transportation</option>
+                                        <option value="equipment">Equipment Upgrade</option>
+                                        <option value="renewable">Renewable Energy</option>
+                                        <option value="afforestation">Afforestation</option>
+                                        <option value="technology">Clean Technology</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solver-controls">
+                            <button type="button" id="run-optimization" class="btn btn-primary">
+                                <i class="fas fa-play-circle"></i> Run Optimization
+                            </button>
+                            <button type="button" id="compare-scenarios" class="btn btn-secondary">
+                                <i class="fas fa-balance-scale"></i> Compare Scenarios
+                            </button>
+                        </div>
+
+                        <div class="optimization-results" id="optimization-results" style="display: none;">
+                            <h4>Optimized Solution</h4>
+                            <div class="solution-summary">
+                                <div class="solution-card highlight">
+                                    <h5>Recommended Strategy</h5>
+                                    <div id="recommended-strategy">--</div>
+                                </div>
+                                <div class="solution-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Total Investment</span>
+                                        <span class="metric-value" id="total-investment">₹0 Cr</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Annual Savings</span>
+                                        <span class="metric-value" id="annual-savings">₹0 Cr/yr</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Emission Reduction</span>
+                                        <span class="metric-value" id="emission-reduction-opt">0 tonnes CO₂eq/yr</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Payback Period</span>
+                                        <span class="metric-value" id="payback-period">0 years</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">ROI</span>
+                                        <span class="metric-value" id="roi-percentage">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="implementation-roadmap">
+                                <h5>Implementation Roadmap</h5>
+                                <div class="roadmap-timeline" id="roadmap-timeline">
+                                    <!-- Timeline will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="scenario-comparison" id="scenario-comparison" style="display: none;">
+                        <h3><i class="fas fa-balance-scale"></i> Scenario Comparison</h3>
+                        <div class="comparison-table-container">
+                            <table class="comparison-table" id="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Criteria</th>
+                                        <th>Current State</th>
+                                        <th>Scenario A</th>
+                                        <th>Scenario B</th>
+                                        <th>Scenario C</th>
+                                        <th>Recommended</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="comparison-body">
+                                    <!-- Comparison data will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="scenario-charts">
+                            <div class="chart-container">
+                                <h4>Cost vs Reduction Analysis</h4>
+                                <canvas id="cost-reduction-chart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <h4>Timeline Comparison</h4>
+                                <canvas id="timeline-comparison-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="smart-insights">
+                        <h3><i class="fas fa-chart-line"></i> Smart Insights & Benchmarking</h3>
+                        <div class="insights-grid">
+                            <div class="insight-card">
+                                <div class="insight-icon">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+                                <div class="insight-content">
+                                    <h4>Industry Benchmark</h4>
+                                    <p id="industry-benchmark">Loading industry comparison...</p>
+                                </div>
+                            </div>
+                            <div class="insight-card">
+                                <div class="insight-icon">
+                                    <i class="fas fa-trending-up"></i>
+                                </div>
+                                <div class="insight-content">
+                                    <h4>Performance Trend</h4>
+                                    <p id="performance-trend"></p>
+                                </div>
+                            </div>
+                            <div class="insight-card">
+                                <div class="insight-icon">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <div class="insight-content">
+                                    <h4>Achievement Potential</h4>
+                                    <p id="achievement-potential">Calculating achievement possibilities...</p>
+                                </div>
+                            </div>
+                            <div class="insight-card">
+                                <div class="insight-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="insight-content">
+                                    <h4>Risk Assessment</h4>
+                                    <p id="risk-assessment">Evaluating implementation risks...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="predictive-modeling">
+                        <h3><i class="fas fa-crystal-ball"></i> Predictive Modeling</h3>
+                        <div class="modeling-controls">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="prediction-years">Prediction Timeline (Years)</label>
+                                    <input type="range" id="prediction-years" min="1" max="30" value="10" step="1">
+                                    <span class="range-value" id="prediction-years-value">10 years</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="growth-scenario">Growth Scenario</label>
+                                    <select id="growth-scenario">
+                                        <option value="conservative">Conservative Growth</option>
+                                        <option value="moderate">Moderate Growth</option>
+                                        <option value="aggressive">Aggressive Growth</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="button" id="run-prediction" class="btn btn-primary">
+                                <i class="fas fa-magic"></i> Generate Predictions
+                            </button>
+                        </div>
+                        
+                        <div class="prediction-results" id="prediction-results" style="display: none;">
+                            <div class="prediction-chart">
+                                <canvas id="prediction-chart"></canvas>
+                            </div>
+                            <div class="prediction-summary">
+                                <h4>Key Predictions</h4>
+                                <div class="prediction-metrics" id="prediction-metrics">
+                                    <!-- Prediction metrics will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-file-alt"></i> Reports & Export</h2>
+                    <p>Generate comprehensive reports and export data for compliance and analysis</p>
+                </div>
+
+                <div class="reports-container">
+                    <div class="report-generator">
+                        <h3>Generate Reports</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="report-type">Report Type</label>
+                                <select id="report-type">
+                                    <option value="comprehensive">Comprehensive Carbon Footprint Report</option>
+                                    <option value="emission-summary">Emission Summary Report</option>
+                                    <option value="pathway-analysis">Pathway Analysis Report</option>
+                                    <option value="compliance">Compliance Report</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="report-period">Reporting Period</label>
+                                <select id="report-period">
+                                    <option value="current-year">Current Year</option>
+                                    <option value="last-year">Last Year</option>
+                                    <option value="custom">Custom Period</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="report-format">Format</label>
+                                <select id="report-format">
+                                    <option value="pdf">PDF</option>
+                                    <option value="excel">Excel</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="report-actions">
+                            <button type="button" id="generate-report" class="btn btn-primary">
+                                <i class="fas fa-file-download"></i> Generate Report
+                            </button>
+                            <button type="button" id="save-data" class="btn btn-secondary">
+                                <i class="fas fa-save"></i> Save Current Data
+                            </button>
+                            <button type="button" id="load-data" class="btn btn-secondary">
+                                <i class="fas fa-upload"></i> Load Saved Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="compliance-section">
+                        <h3>Compliance Status</h3>
+                        <div class="compliance-grid">
+                            <div class="compliance-item">
+                                <div class="compliance-status success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="compliance-details">
+                                    <h4>Ministry of Coal Guidelines</h4>
+                                    <p>Compliant with latest emission reporting standards</p>
+                                </div>
+                            </div>
+                            <div class="compliance-item">
+                                <div class="compliance-status success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="compliance-details">
+                                    <h4>National Determined Contributions (NDCs)</h4>
+                                    <p>Aligned with India's climate commitments</p>
+                                </div>
+                            </div>
+                            <div class="compliance-item">
+                                <div class="compliance-status warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="compliance-details">
+                                    <h4>State Environmental Clearance</h4>
+                                    <p>Review required for afforestation plans</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Ministry of Coal</h4>
+                    <p>Central Mine Planning & Design Institute Limited</p>
+                    <p>Supporting India's journey to carbon neutrality</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#dashboard">Dashboard</a></li>
+                        <li><a href="#emission-calculator">Calculator</a></li>
+                        <li><a href="#neutrality-pathways">Pathways</a></li>
+                        <li><a href="#reports">Reports</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: info@coalcarboncalc.gov.in</p>
+                    <p>Phone: +91-7015338736</p>
+                    <p>Address: New Delhi, India</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Version Info</h4>
+                    <p>Version 1.0.0</p>
+                    <p>Last Updated: December 2024</p>
+                    <p>&copy; 2024 Ministry of Coal, Government of India</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Theme toggle button (bottom-right) -->
+    <div id="theme-toggle" class="theme-toggle" title="Toggle theme" aria-label="Toggle theme" role="button" tabindex="0">
+        <i class="fas fa-sun" id="theme-icon"></i>
+    </div>
+
+    <!-- add html2pdf (bundled html2canvas + jsPDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+    <!-- Leaflet JS for map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j8k0t4y84b2Nqgq2f9jzH3b0u1j3p3V7xkP4n60=" crossorigin=""></script>
+
+    <!-- add SheetJS for Excel export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <!-- Report download handler -->
+    <script>
+    (function() {
+        const btn = document.getElementById('generate-report');
+        const formatSelect = document.getElementById('report-format');
+
+        if (!btn || !formatSelect) return;
+
+        function collectReportData() {
+            // collect high-level metrics
+            const metrics = {
+                'Total Emissions (tonnes CO₂eq/year)': document.getElementById('total-emissions')?.textContent?.trim() || '',
+                'Per Capita Emissions (tonnes CO₂eq/person/year)': document.getElementById('per-capita-emissions')?.textContent?.trim() || '',
+                'Total Carbon Sinks (tonnes CO₂eq/year)': document.getElementById('total-sinks')?.textContent?.trim() || '',
+                'Net Emissions (tonnes CO₂eq/year)': document.getElementById('net-emissions')?.textContent?.trim() || '',
+                'Neutrality Progress': document.getElementById('neutrality-percentage')?.textContent?.trim() || ''
+            };
+
+            // emissions calculator inputs/results
+            const calculator = {
+                'Mine Name': document.getElementById('mine-name')?.value || '',
+                'Mine Type': document.getElementById('mine-type')?.value || '',
+                'Annual Capacity (Mt)': document.getElementById('mine-capacity')?.value || '',
+                'Workforce': document.getElementById('workforce')?.value || '',
+                'State': document.getElementById('state')?.value || '',
+                'Diesel Consumption (L/month)': document.getElementById('diesel-consumption')?.value || '',
+                'Transport Distance (km/day)': document.getElementById('transport-distance')?.value || '',
+                'Vehicle Count': document.getElementById('vehicle-count')?.value || '',
+                'Electricity (kWh/month)': document.getElementById('electricity-consumption')?.value || '',
+                'Transport Emissions (t CO2eq/yr)': document.getElementById('transport-emissions')?.textContent?.trim() || '',
+                'Equipment Emissions (t CO2eq/yr)': document.getElementById('equipment-emissions')?.textContent?.trim() || '',
+                'Energy Emissions (t CO2eq/yr)': document.getElementById('energy-emissions')?.textContent?.trim() || '',
+                'Total Calculated Emissions (t CO2eq/yr)': document.getElementById('total-calculated-emissions')?.textContent?.trim() || ''
+            };
+
+            // extra: reports options selected
+            const reportOptions = {
+                'Report Type': document.getElementById('report-type')?.value || '',
+                'Reporting Period': document.getElementById('report-period')?.value || '',
+                'Format': formatSelect?.value || ''
+            };
+
+            return { metrics, calculator, reportOptions, generatedAt: new Date().toLocaleString() };
+        }
+
+        function buildHTMLReport(data) {
+            const { metrics, calculator, reportOptions, generatedAt } = data;
+            let html = `
+                <div style="font-family:Arial,Helvetica,sans-serif;color:#222;padding:18px;">
+                  <h1 style="margin-bottom:6px;">Coal Mine Carbon Footprint Report</h1>
+                  <div style="color:#666;margin-bottom:14px;">Generated: ${generatedAt}</div>
+                  <h2 style="border-bottom:1px solid #eee;padding-bottom:6px;">Summary Metrics</h2>
+                  <table style="width:100%;border-collapse:collapse;margin-bottom:12px;">`;
+            Object.entries(metrics).forEach(([k,v]) => {
+                html += `<tr><td style="padding:6px 8px;border:1px solid #f1f1f1;width:50%;"><strong>${k}</strong></td><td style="padding:6px 8px;border:1px solid #f1f1f1;">${v}</td></tr>`;
+            });
+            html += `</table>
+                  <h2 style="border-bottom:1px solid #eee;padding-bottom:6px;">Calculator Inputs & Results</h2>
+                  <table style="width:100%;border-collapse:collapse;margin-bottom:12px;">`;
+            Object.entries(calculator).forEach(([k,v]) => {
+                html += `<tr><td style="padding:6px 8px;border:1px solid #f1f1f1;width:50%;"><strong>${k}</strong></td><td style="padding:6px 8px;border:1px solid #f1f1f1;">${v}</td></tr>`;
+            });
+            html += `</table>
+                  <h2 style="border-bottom:1px solid #eee;padding-bottom:6px;">Report Options</h2>
+                  <table style="width:100%;border-collapse:collapse;margin-bottom:18px;">`;
+            Object.entries(reportOptions).forEach(([k,v]) => {
+                html += `<tr><td style="padding:6px 8px;border:1px solid #f1f1f1;width:50%;"><strong>${k}</strong></td><td style="padding:6px 8px;border:1px solid #f1f1f1;">${v}</td></tr>`;
+            });
+            html += `</table>
+                  <footer style="color:#888;font-size:12px;margin-top:20px;">Ministry of Coal &middot; Coal Mine Carbon Footprint Calculator</footer>
+                </div>`;
+            return html;
+        }
+
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 5000);
+        }
+
+        async function exportPDF(htmlContent, filename) {
+            // create temporary container
+            const wrapper = document.createElement('div');
+            wrapper.style.maxWidth = '900px';
+            wrapper.innerHTML = htmlContent;
+            document.body.appendChild(wrapper);
+
+            try {
+                await html2pdf().set({
+                    margin: 10,
+                    filename,
+                    html2canvas: { scale: 2, useCORS: true },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                }).from(wrapper).save();
+            } finally {
+                wrapper.remove();
+            }
+        }
+
+        function exportCSV(dataObj, filename) {
+            // produce simple key,value CSV combining metrics & calculator & options
+            const rows = [];
+            rows.push(['Section','Key','Value']);
+            Object.entries(dataObj.metrics).forEach(([k,v]) => rows.push(['Summary', k, v]));
+            Object.entries(dataObj.calculator).forEach(([k,v]) => rows.push(['Calculator', k, v]));
+            Object.entries(dataObj.reportOptions).forEach(([k,v]) => rows.push(['Report', k, v]));
+            rows.push(['Meta','Generated At', dataObj.generatedAt]);
+
+            const csv = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            downloadBlob(blob, filename);
+        }
+
+        function exportExcel(dataObj, filename) {
+            // convert to sheet: create arrays then use SheetJS
+            const aoa = [];
+            aoa.push(['Section','Key','Value']);
+            Object.entries(dataObj.metrics).forEach(([k,v]) => aoa.push(['Summary', k, v]));
+            aoa.push([]);
+            Object.entries(dataObj.calculator).forEach(([k,v]) => aoa.push(['Calculator', k, v]));
+            aoa.push([]);
+            Object.entries(dataObj.reportOptions).forEach(([k,v]) => aoa.push(['Report', k, v]));
+            aoa.push([]);
+            aoa.push(['Meta','Generated At', dataObj.generatedAt]);
+
+            const ws = XLSX.utils.aoa_to_sheet(aoa);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Report');
+            XLSX.writeFile(wb, filename);
+        }
+
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const fmt = (formatSelect.value || 'pdf').toLowerCase();
+            const data = collectReportData();
+            const baseName = `coal-mine-report-${(new Date()).toISOString().slice(0,19).replace(/[:T]/g,'-')}`;
+
+            try {
+                if (fmt === 'pdf') {
+                    const html = buildHTMLReport(data);
+                    await exportPDF(html, `${baseName}.pdf`);
+                } else if (fmt === 'csv') {
+                    exportCSV(data, `${baseName}.csv`);
+                } else if (fmt === 'excel' || fmt === 'xlsx') {
+                    exportExcel(data, `${baseName}.xlsx`);
+                } else {
+                    // fallback to PDF
+                    const html = buildHTMLReport(data);
+                    await exportPDF(html, `${baseName}.pdf`);
+                }
+            } catch (err) {
+                console.error('Report export failed', err);
+                alert('Report export failed. Check console for details.');
+            }
+        });
+    })();
+    </script>
+
+    <!-- Load main script -->
+    <script src="script.js"></script>
+
+    <!-- Map initialization script (replaced with Google Maps implementation, live fetch fallback) -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // sample mines data - fallback if no server endpoint available
+        const sampleMines = [
+            { id: 1, name: 'Bokaro (Open Cast)', state: 'Jharkhand', lat: 23.6693, lon: 86.1512, type: 'Open Cast', capacity_mt: 8.2, workforce: 1200, status: 'active' },
+            { id: 2, name: 'Raniganj (Underground)', state: 'West Bengal', lat: 23.6645, lon: 87.1400, type: 'Underground', capacity_mt: 5.4, workforce: 950, status: 'active' },
+            { id: 3, name: 'Talcher (Mixed)', state: 'Odisha', lat: 20.7440, lon: 85.1446, type: 'Mixed', capacity_mt: 10.5, workforce: 1800, status: 'active' },
+            { id: 4, name: 'Aditya (Open Cast)', state: 'Chhattisgarh', lat: 21.2955, lon: 82.1490, type: 'Open Cast', capacity_mt: 6.0, workforce: 700, status: 'inactive' }
+        ];
+
+        const totalMinesEl = document.getElementById('total-mines');
+        const mapContainerId = 'india-map';
+        const listEl = document.getElementById('mine-items');
+        const mineSection = document.getElementById('mine-map');
+        const navMineLink = document.querySelector('.nav-link[data-section="mine-map"]');
+
+        // Google Maps state
+        let gmaps = null;
+        let indiaMap = null;
+        let markersById = new Map();
+        let bounds = null;
+
+        // API key inserted as requested
+        const GOOGLE_MAPS_API_KEY = 'AIzaSyCMsEgmZL1OkfdGj1BpaSpP-AjCh8AjwBU';
+
+        function loadGoogleMaps(apiKey) {
+            return new Promise((resolve, reject) => {
+                if (window.google && window.google.maps) return resolve(window.google.maps);
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+                script.async = true;
+                script.defer = true;
+                script.onload = () => resolve(window.google.maps);
+                script.onerror = () => reject(new Error('Google Maps script failed to load'));
+                document.head.appendChild(script);
+            });
+        }
+
+        function makeInfoContent(m) {
+            return `<div style="font-size:13px;line-height:1.3;">
+                        <strong>${m.name}</strong><br>
+                        ${m.state} • ${m.type}<br>
+                        Capacity: ${m.capacity_mt || '-'} Mt/yr<br>
+                        Workforce: ${m.workforce || '-' }<br>
+                        Status: ${m.status || 'unknown'}<br>
+                        Updated: ${new Date(m.timestamp || Date.now()).toLocaleString()}
+                    </div>`;
+        }
+
+        function renderList(mineList) {
+            if (!listEl) return;
+            listEl.innerHTML = '';
+            mineList.forEach(m => {
+                const item = document.createElement('div');
+                item.className = 'mine-item';
+                item.tabIndex = 0;
+                item.innerHTML = `<strong>${m.name}</strong><small>${m.state} • ${m.type}</small>`;
+                item.addEventListener('click', () => {
+                    const entry = markersById.get(m.id);
+                    if (entry) {
+                        indiaMap.panTo(entry.marker.getPosition());
+                        entry.info.open(indiaMap, entry.marker);
+                        // ensure map redraw on small screens
+                        setTimeout(() => google.maps.event.trigger(indiaMap, 'resize'), 100);
+                    }
+                });
+                item.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') item.click(); });
+                listEl.appendChild(item);
+            });
+        }
+
+        function renderMarkers(mineList) {
+            if (!indiaMap) return;
+            // clear old markers
+            markersById.forEach(({ marker, info }) => {
+                marker.setMap(null);
+                try { info.close(); } catch(e) {}
+            });
+            markersById.clear();
+            bounds = new google.maps.LatLngBounds();
+
+            mineList.forEach(m => {
+                const pos = new google.maps.LatLng(m.lat, m.lon);
+                const color = m.status === 'active' ? '#27ae60' : '#888';
+                const svg = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="12" r="9" fill="${color}" stroke="#fff" stroke-width="2"/></svg>`);
+                const marker = new google.maps.Marker({
+                    position: pos,
+                    map: indiaMap,
+                    title: m.name,
+                    icon: { url: `data:image/svg+xml;utf8,${svg}`, scaledSize: new google.maps.Size(24,24) }
+                });
+                const info = new google.maps.InfoWindow({ content: makeInfoContent(m) });
+                marker.addListener('click', () => info.open(indiaMap, marker));
+                markersById.set(m.id, { marker, info });
+                bounds.extend(pos);
+            });
+
+            if (!bounds.isEmpty && !bounds.isEmpty()) {
+                indiaMap.fitBounds(bounds, 40);
+            } else {
+                indiaMap.setCenter({ lat: 22.0, lng: 79.0 });
+                indiaMap.setZoom(5);
+            }
+
+            // ensure map renders correctly
+            setTimeout(() => google.maps.event.trigger(indiaMap, 'resize'), 200);
+        }
+
+        // Try to fetch live data from server; fallback to sample with light jitter
+        async function fetchMineLocationsLive() {
+            try {
+                const resp = await fetch('/api/mines/live', { cache: 'no-cache' });
+                if (resp.ok) {
+                    const json = await resp.json();
+                    // expect array of {id, name, lat, lon, ...}
+                    if (Array.isArray(json) && json.length) return json.map(m => Object.assign({}, m, { timestamp: m.timestamp || Date.now() }));
+                }
+            } catch (err) {
+                // network or CORS error — fall back silently
+                console.warn('Live mines fetch failed, using sample data:', err);
+            }
+            // fallback: sample with tiny jitter for demo
+            return sampleMines.map(m => {
+                const jitter = v => v + (Math.random() - 0.5) * 0.0008;
+                return Object.assign({}, m, { lat: jitter(m.lat), lon: jitter(m.lon), timestamp: Date.now() });
+            });
+        }
+
+        // initialize Google Map once
+        function initIndiaMapOnce() {
+            if (indiaMap) {
+                setTimeout(() => google.maps.event.trigger(indiaMap, 'resize'), 150);
+                return;
+            }
+            const el = document.getElementById(mapContainerId);
+            if (!el) return;
+
+            loadGoogleMaps(GOOGLE_MAPS_API_KEY).then((gm) => {
+                gmaps = gm;
+                indiaMap = new google.maps.Map(el, {
+                    center: { lat: 22.0, lng: 79.0 },
+                    zoom: 5,
+                    mapTypeId: 'terrain',
+                    gestureHandling: 'greedy',
+                    streetViewControl: false
+                });
+
+                // initial load + list
+                fetchMineLocationsLive().then(data => {
+                    renderMarkers(data);
+                    renderList(data);
+                    if (totalMinesEl) totalMinesEl.textContent = data.length;
+                }).catch(err => console.error('Failed to load mine locations', err));
+
+                // poll for updates (30s)
+                setInterval(async () => {
+                    try {
+                        const data = await fetchMineLocationsLive();
+                        renderMarkers(data);
+                        renderList(data);
+                        if (totalMinesEl) totalMinesEl.textContent = data.length;
+                    } catch (err) {
+                        console.error('Failed to refresh mine locations', err);
+                    }
+                }, 30000);
+            }).catch(err => {
+                console.error('Google Maps failed to load', err);
+                const el = document.getElementById(mapContainerId);
+                if (el) el.innerHTML = '<p style="padding:16px;color:#666">Map failed to load. Check API key/network.</p>';
+            });
+        }
+
+        // init when nav clicked
+        if (navMineLink) {
+            navMineLink.addEventListener('click', () => setTimeout(initIndiaMapOnce, 120));
+            navMineLink.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navMineLink.click(); } });
+        }
+
+        // init if loaded directly or visible
+        if (location.hash === '#mine-map' || (mineSection && mineSection.classList.contains('active'))) {
+            initIndiaMapOnce();
+        }
+
+        if (window.IntersectionObserver && mineSection) {
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) initIndiaMapOnce(); });
+            }, { threshold: 0.10 });
+            obs.observe(mineSection);
+        }
+    });
+    </script>
+
+    <script>
+    // Force header text to be white on page load and theme change
+    function fixHeaderText() {
+        const headerStats = document.querySelectorAll('.header-stats, .header-stats *, .stat-item, .stat-item span, .stat-item strong');
+        headerStats.forEach(el => {
+            if (!el.classList.contains('fas') && !el.classList.contains('fa-industry') && !el.classList.contains('fa-leaf')) {
+                el.style.color = 'white';
+                el.style.opacity = '1';
+            }
+        });
+        
+        // Fix icons separately
+        const icons = document.querySelectorAll('.header-stats i, .stat-item i');
+        icons.forEach(icon => {
+            icon.style.color = '#27ae60';
+        });
+        
+        // Ensure header has dark background
+        const header = document.querySelector('.main-header');
+        if (header) {
+            header.style.background = 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)';
+        }
+    }
+    
+    // Run on page load
+    document.addEventListener('DOMContentLoaded', fixHeaderText);
+    // Run immediately if DOM is already loaded
+    if (document.readyState !== 'loading') {
+        fixHeaderText();
+    }
+    
+    // Theme toggle: toggles body.dark-theme, updates icon and persists choice
+    (function() {
+        const toggle = document.getElementById('theme-toggle');
+        const icon = document.getElementById('theme-icon');
+        if (!toggle || !icon) return;
+
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const stored = localStorage.getItem('theme');
+
+        function apply(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                icon.classList.remove('fa-sun'); icon.classList.add('fa-moon');
+                toggle.classList.add('dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                icon.classList.remove('fa-moon'); icon.classList.add('fa-sun');
+                toggle.classList.remove('dark');
+            }
+        }
+
+        const initial = stored || (prefersDark ? 'dark' : 'light');
+        apply(initial);
+
+        toggle.addEventListener('click', () => {
+            const next = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
+            apply(next);
+            localStorage.setItem('theme', next);
+            // Fix header text after theme change
+            setTimeout(fixHeaderText, 10);
+        });
+
+        // keyboard support
+        toggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggle.click();
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
