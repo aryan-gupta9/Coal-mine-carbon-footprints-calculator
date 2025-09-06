@@ -1,0 +1,1 @@
+# Coal-mine-carbon-footprints-calculator
