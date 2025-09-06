@@ -1,0 +1,108 @@
+/* ADAPTIVE HEADER THEME FIX - Load this after styles.css */
+
+/* =================================== */
+/* LIGHT THEME HEADER STYLES */
+/* =================================== */
+
+/* Light theme - light header background */
+body:not(.dark-theme) .main-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+    background-color: #ffffff !important;
+    border-bottom: 2px solid #e0e6ed !important;
+}
+
+/* Light theme - black text */
+body:not(.dark-theme) .header-stats,
+body:not(.dark-theme) .header-stats *,
+body:not(.dark-theme) .header-stats .stat-item,
+body:not(.dark-theme) .header-stats .stat-item *,
+body:not(.dark-theme) .header-stats .stat-item span,
+body:not(.dark-theme) .header-stats .stat-item strong,
+body:not(.dark-theme) .stat-item,
+body:not(.dark-theme) .stat-item *,
+body:not(.dark-theme) .stat-item span,
+body:not(.dark-theme) .stat-item strong,
+body:not(.dark-theme) #total-mines {
+    color: #2c3e50 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+body:not(.dark-theme) .title-section h1,
+body:not(.dark-theme) .title-section p {
+    color: #2c3e50 !important;
+    opacity: 1 !important;
+}
+
+body:not(.dark-theme) .title-section p {
+    color: #34495e !important;
+}
+
+/* =================================== */
+/* DARK THEME HEADER STYLES */
+/* =================================== */
+
+/* Dark theme - dark header background */
+body.dark-theme .main-header {
+    background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%) !important;
+    background-color: #1a252f !important;
+}
+
+/* Dark theme - white text */
+body.dark-theme .header-stats,
+body.dark-theme .header-stats *,
+body.dark-theme .header-stats .stat-item,
+body.dark-theme .header-stats .stat-item *,
+body.dark-theme .header-stats .stat-item span,
+body.dark-theme .header-stats .stat-item strong,
+body.dark-theme .stat-item,
+body.dark-theme .stat-item *,
+body.dark-theme .stat-item span,
+body.dark-theme .stat-item strong,
+body.dark-theme #total-mines {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+body.dark-theme .title-section h1,
+body.dark-theme .title-section p {
+    color: #ffffff !important;
+    opacity: 1 !important;
+}
+
+/* =================================== */
+/* COMMON STYLES FOR BOTH THEMES */
+/* =================================== */
+
+/* Icons stay green in both themes */
+.header-stats i,
+.stat-item i,
+.header-stats .fas,
+.stat-item .fas,
+body:not(.dark-theme) .header-stats i,
+body:not(.dark-theme) .stat-item i,
+body.dark-theme .header-stats i,
+body.dark-theme .stat-item i {
+    color: #27ae60 !important;
+    display: inline-block !important;
+}
+
+/* Force display of stat items */
+.header-stats {
+    display: flex !important;
+    gap: 2rem !important;
+}
+
+.stat-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+/* Remove all transitions from header */
+.main-header *,
+.header-stats *,
+.stat-item * {
+    transition: none !important;
+}

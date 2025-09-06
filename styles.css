@@ -1,0 +1,3599 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f6fa;
+    /* Smooth transition for theme changes */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Smooth transitions for all elements during theme change */
+/* Use CSS custom properties for better control */
+:root {
+    --transition-speed: 0.3s;
+    --transition-ease: ease;
+}
+
+/* Apply transitions only to specific properties that need them */
+* {
+    transition: background-color var(--transition-speed) var(--transition-ease), 
+                border-color var(--transition-speed) var(--transition-ease),
+                box-shadow var(--transition-speed) var(--transition-ease),
+                transform var(--transition-speed) var(--transition-ease);
+}
+
+/* Text color transitions handled separately for better control */
+/* Exclude header elements from color transitions */
+h1:not(.title-section h1), 
+h2, h3, h4, h5, h6, 
+p:not(.title-section p), 
+span:not(.stat-item span):not(.header-stats span), 
+div:not(.header-stats):not(.stat-item), 
+li, a, label, td, th {
+    transition: color var(--transition-speed) var(--transition-ease);
+}
+
+/* Explicitly remove transitions from header stats */
+.header-stats,
+.header-stats *,
+.stat-item,
+.stat-item *,
+.title-section,
+.title-section * {
+    transition: background-color var(--transition-speed) var(--transition-ease),
+                border-color var(--transition-speed) var(--transition-ease),
+                box-shadow var(--transition-speed) var(--transition-ease);
+    /* NO color transition */
+    transition-property: background-color, border-color, box-shadow !important;
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+.main-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    /* Ensure header always has dark background */
+    background-color: #2c3e50 !important;
+}
+
+/* Light theme header - keep dark background */
+body:not(.dark-theme) .main-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+    background-color: #2c3e50 !important;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo-section img {
+    width: 50px;
+    height: 50px;
+}
+
+.title-section h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.title-section p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.header-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: white !important;
+}
+
+.stat-item span {
+    color: white !important;
+    display: inline-block;
+}
+
+.stat-item strong {
+    color: white !important;
+    font-weight: bold;
+}
+
+.stat-item i {
+    color: #27ae60;
+}
+
+/* Ensure stat items are visible in light theme */
+body:not(.dark-theme) .stat-item {
+    color: white !important;
+}
+
+body:not(.dark-theme) .stat-item span {
+    color: white !important;
+}
+
+body:not(.dark-theme) .stat-item strong {
+    color: white !important;
+}
+
+/* Navigation Styles */
+.main-nav {
+    background-color: #ffffff;
+    border-bottom: 3px solid #27ae60;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    overflow-x: auto;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    color: #555;
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #27ae60;
+    border-bottom-color: #27ae60;
+    background-color: #f8f9fa;
+}
+
+.nav-link i {
+    font-size: 1.1rem;
+}
+
+/* Main Content */
+.main-content {
+    padding: 2rem 0;
+    min-height: calc(100vh - 200px);
+}
+
+.content-section {
+    display: none;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.content-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.section-header h2 i {
+    color: #27ae60;
+    margin-right: 0.5rem;
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+}
+
+/* Dashboard Styles */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.dashboard-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-left: 4px solid #27ae60;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.card-header h3 {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.card-header i {
+    margin-right: 0.5rem;
+    color: #27ae60;
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    line-height: 1;
+}
+
+.metric-unit {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-bottom: 0.5rem;
+}
+
+.metric-change {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.metric-change.positive {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.metric-change.negative {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.neutrality-progress {
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #e74c3c, #f39c12, #27ae60);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+/* Dashboard Charts */
+.dashboard-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+.chart-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.chart-container.large {
+    grid-column: 1 / -1;
+}
+
+.chart-container h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+/* Form Styles */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #e0e6ed;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #27ae60;
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
+/* Range Input Styles */
+input[type="range"] {
+    appearance: none;
+    height: 6px;
+    background: #e0e6ed;
+    border-radius: 3px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #27ae60;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #27ae60;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.range-value {
+    font-weight: 600;
+    color: #27ae60;
+    margin-left: 1rem;
+}
+
+/* Button Styles */
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #229954, #27ae60);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d;
+    transform: translateY(-2px);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #27ae60;
+    color: #27ae60;
+}
+
+.btn-outline:hover {
+    background: #27ae60;
+    color: white;
+}
+
+/* Calculator Styles */
+.calculator-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.mine-info-form,
+.emissions-calculator {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.mine-info-form h3,
+.emissions-calculator h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 0.5rem;
+}
+
+.activity-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border: 2px solid #ecf0f1;
+    border-radius: 8px;
+}
+
+.activity-section h4 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.activity-section h4 i {
+    color: #27ae60;
+}
+
+.calculate-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.results-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.results-section h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.result-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.result-card.highlight {
+    border: 2px solid #27ae60;
+    background: linear-gradient(135deg, #f8fff9, #ffffff);
+}
+
+.result-card h4 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.result-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #27ae60;
+    margin-bottom: 0.5rem;
+}
+
+.result-unit {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.result-percentage {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #e74c3c;
+    margin-top: 0.5rem;
+}
+
+/* Carbon Sinks Styles */
+.sinks-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.existing-sinks,
+.afforestation-planning {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.existing-sinks h3,
+.afforestation-planning h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 0.5rem;
+}
+
+.state-afforestation-rates {
+    margin-top: 2rem;
+}
+
+.state-afforestation-rates h4 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.rates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.rate-item {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #27ae60;
+}
+
+/* Pathways Styles */
+.pathways-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.pathway-simulator {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.pathway-simulator h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 0.5rem;
+}
+
+.strategy-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border: 2px solid #ecf0f1;
+    border-radius: 8px;
+}
+
+.strategy-section h4 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.strategy-section h4 i {
+    color: #27ae60;
+}
+
+.simulate-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.simulation-results {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.simulation-results h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.pathway-comparison {
+    margin-top: 2rem;
+}
+
+/* Visualization Styles */
+.visualization-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.chart-controls {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: end;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+/* Reports Styles */
+.reports-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.report-generator,
+.compliance-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.report-generator h3,
+.compliance-section h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 0.5rem;
+}
+
+.report-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.compliance-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.compliance-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+.compliance-status {
+    font-size: 1.5rem;
+}
+
+.compliance-status.success {
+    color: #27ae60;
+}
+
+.compliance-status.warning {
+    color: #f39c12;
+}
+
+.compliance-details h4 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.compliance-details p {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+/* Footer Styles */
+.main-footer {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 2rem 0 1rem;
+    margin-top: 3rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.footer-section h4 {
+    color: white;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.footer-section p,
+.footer-section li {
+    color: #bdc3c7;
+    margin-bottom: 0.5rem;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section a {
+    color: #bdc3c7;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: #27ae60;
+}
+
+/* Theme toggle button (floating bottom-right) */
+.theme-toggle {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1f2937;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+    transition: background-color 0.2s, color 0.2s, transform 0.12s;
+}
+.theme-toggle:active { transform: scale(0.98); }
+.theme-toggle:focus { outline: 2px solid rgba(34,197,94,0.25); outline-offset: 2px; }
+.theme-toggle .fas { font-size: 18px; }
+
+/* Dark state for the toggle itself */
+.theme-toggle.dark { background: #0f1724; color: #f8fafc; }
+
+/* Basic dark-theme overrides */
+body.dark-theme {
+    background-color: #071026;
+    color: #dbeafe;
+}
+
+/* Make common containers darker in dark mode (add more selectors as needed) */
+body.dark-theme .main-header,
+body.dark-theme .main-nav,
+body.dark-theme .content-section,
+body.dark-theme .reports-container,
+body.dark-theme .dashboard-card,
+body.dark-theme .card-content,
+body.dark-theme .report-generator,
+body.dark-theme .ai-analysis-card,
+body.dark-theme .recommendations-panel {
+    background-color: #0b1220;
+    color: #dbeafe;
+    border-color: rgba(255,255,255,0.04);
+}
+
+/* Link / button colors in dark mode */
+body.dark-theme a,
+body.dark-theme .nav-link,
+body.dark-theme .btn {
+    color: #cbe7ff;
+}
+body.dark-theme .btn.btn-primary {
+    background-color: #0b86ff;
+    border-color: #0867c9;
+    color: #fff;
+}
+body.dark-theme .btn.btn-secondary {
+    background-color: #334155;
+    border-color: #28343f;
+    color: #fff;
+}
+
+/* Defensive: keep spinner visible in dark mode */
+body.dark-theme .status-indicator { color: inherit; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap;
+    }
+    
+    .nav-link {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-controls {
+        flex-direction: column;
+    }
+    
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .report-actions {
+        flex-direction: column;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .metric-value {
+        font-size: 2rem;
+    }
+    
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title-section h1 {
+        font-size: 1.5rem;
+    }
+    
+    .nav-link {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .metric-value {
+        font-size: 1.8rem;
+    }
+    
+    .section-header h2 {
+        font-size: 1.6rem;
+    }
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.p-1 { padding: 0.5rem; }
+.p-2 { padding: 1rem; }
+.p-3 { padding: 1.5rem; }
+.p-4 { padding: 2rem; }
+
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+/* Loading Animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(39, 174, 96, 0.3);
+    border-radius: 50%;
+    border-top-color: #27ae60;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    z-index: 1000;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+}
+
+.notification.error {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.notification.warning {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+/* Smart Calculator Styles */
+.smart-calculator-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Analysis Results */
+.analysis-result {
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.status-excellent {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    border-left: 5px solid #28a745;
+    color: #155724;
+}
+
+.status-good {
+    background: linear-gradient(135deg, #e2f3ff, #bee5eb);
+    border-left: 5px solid #17a2b8;
+    color: #0c5460;
+}
+
+.status-moderate {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    border-left: 5px solid #ffc107;
+    color: #856404;
+}
+
+.status-poor {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    border-left: 5px solid #dc3545;
+    color: #721c24;
+}
+
+.analysis-metrics {
+    margin: 1rem 0;
+}
+
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 4px;
+}
+
+.analysis-recommendation {
+    font-style: italic;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.recommended-cell {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    font-weight: bold;
+    color: #155724;
+}
+
+.ai-analysis-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    margin-bottom: 2rem;
+}
+
+.ai-analysis-card h3 {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.analysis-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.analysis-item h4 {
+    color: white;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.status-indicator {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.1rem;
+}
+
+.status-indicator.loading {
+    opacity: 0.8;
+}
+
+.score-display {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.score-circle {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(#27ae60 0deg, #27ae60 0deg, rgba(255,255,255,0.2) 0deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+}
+
+.score-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+}
+
+.score-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.score-breakdown {
+    flex: 1;
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.score-category {
+    min-width: 100px;
+    font-size: 0.9rem;
+}
+
+.score-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.score-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    background: linear-gradient(90deg, #e74c3c, #f39c12, #27ae60);
+}
+
+.score-points {
+    min-width: 40px;
+    font-size: 0.8rem;
+    text-align: right;
+}
+
+.ai-actions {
+    text-align: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Optimization Solver */
+.optimization-solver,
+.scenario-comparison,
+.smart-insights,
+.predictive-modeling {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.optimization-solver h3,
+.scenario-comparison h3,
+.smart-insights h3,
+.predictive-modeling h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 0.5rem;
+}
+
+.solver-controls,
+.modeling-controls {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.solution-summary {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.solution-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.solution-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    background: white;
+    border-radius: 6px;
+    border-left: 4px solid #27ae60;
+}
+
+.metric-label {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.metric-value {
+    font-weight: bold;
+    color: #27ae60;
+}
+
+/* Implementation Roadmap */
+.roadmap-timeline {
+    position: relative;
+    padding: 1rem 0;
+}
+
+.roadmap-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.roadmap-item::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 40px;
+    bottom: -20px;
+    width: 2px;
+    background: #e0e6ed;
+}
+
+.roadmap-item:last-child::before {
+    display: none;
+}
+
+.roadmap-phase {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #27ae60;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 1rem;
+    z-index: 1;
+}
+
+.roadmap-content {
+    flex: 1;
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #27ae60;
+}
+
+.roadmap-title {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.roadmap-details {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.roadmap-timeline-label {
+    background: #27ae60;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-left: auto;
+}
+
+/* Recommendations Panel */
+.recommendations-panel {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.recommendations-panel h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 0.5rem;
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.recommendation-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 4px solid #27ae60;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.recommendation-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.recommendation-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #27ae60;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.recommendation-title {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.recommendation-priority {
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+.priority-high {
+    background: #fee;
+    color: #e74c3c;
+}
+
+.priority-medium {
+    background: #fff8e1;
+    color: #f39c12;
+}
+
+.priority-low {
+    background: #e8f5e8;
+    color: #27ae60;
+}
+
+.recommendation-content {
+    margin-bottom: 1rem;
+}
+
+.recommendation-metrics {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.recommendation-metric {
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-align: center;
+    min-width: 100px;
+}
+
+.metric-number {
+    font-weight: bold;
+    color: #27ae60;
+    display: block;
+}
+
+.metric-name {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+}
+
+.recommendation-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Comparison Table */
+.comparison-table-container {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e6ed;
+}
+
+.comparison-table th {
+    background: #2c3e50;
+    color: white;
+    font-weight: 600;
+}
+
+.comparison-table tr:hover {
+    background: #f8f9fa;
+}
+
+.scenario-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+/* Smart Insights */
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.insight-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    border-left: 4px solid #27ae60;
+    transition: transform 0.2s ease;
+}
+
+.insight-card:hover {
+    transform: translateY(-2px);
+}
+
+.insight-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+/* Mine Map Section Styles */
+.map-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.map-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.control-panel,
+.map-statistics {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.control-panel h3,
+.map-statistics h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.map-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e0e6ed;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin-bottom: 0.3rem;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #27ae60;
+}
+
+.stat-unit {
+    font-size: 0.8rem;
+    color: #95a5a6;
+    margin-left: 0.2rem;
+}
+
+/* Map Display */
+.map-display {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+#google-map {
+    border: 2px solid #e0e6ed;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Map Legend */
+.map-legend {
+    background: white;
+    border: 2px solid #e0e6ed;
+    border-radius: 8px;
+    padding: 1rem;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 5;
+    max-width: 250px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.map-legend h4 {
+    margin: 0 0 0.8rem 0;
+    color: #2c3e50;
+    font-size: 1rem;
+    border-bottom: 1px solid #e0e6ed;
+    padding-bottom: 0.5rem;
+}
+
+.legend-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.legend-marker {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #333;
+}
+
+.legend-marker.open-cast {
+    background: #3498db;
+}
+
+.legend-marker.underground {
+    background: #9b59b6;
+}
+
+.legend-marker.mixed {
+    background: #f39c12;
+}
+
+.legend-marker.high-emission {
+    background: #FF0000;
+}
+
+.legend-marker.medium-emission {
+    background: #FFA500;
+}
+
+.legend-marker.low-emission {
+    background: #00FF00;
+}
+
+/* Mines Table */
+.mines-list {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.mines-list h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.mines-table-container {
+    overflow-x: auto;
+}
+
+.mines-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.mines-table th,
+.mines-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e6ed;
+}
+
+.mines-table th {
+    background: #2c3e50;
+    color: white;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+.mines-table tr:hover {
+    background: #f8f9fa;
+}
+
+.mines-table .btn-small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    margin: 0 0.2rem;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.mines-table .btn-small:hover {
+    background: #2ecc71;
+}
+
+/* Info Window Styles */
+.info-window-content {
+    max-width: 300px;
+    padding: 0.5rem;
+}
+
+.info-window-content h3 {
+    margin: 0 0 1rem 0;
+    color: #2c3e50;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 0.5rem;
+}
+
+.info-details {
+    margin-bottom: 1rem;
+}
+
+.info-details p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: #34495e;
+}
+
+.info-details strong {
+    color: #2c3e50;
+}
+
+.info-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.info-actions .btn-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.info-actions .btn-small:hover {
+    background: #2ecc71;
+}
+
+/* Responsive Map Layout */
+@media (max-width: 768px) {
+    .map-controls {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .map-legend {
+        position: static;
+        margin-top: 1rem;
+        max-width: 100%;
+    }
+    
+    .mines-table {
+        font-size: 0.8rem;
+    }
+    
+    .mines-table th,
+    .mines-table td {
+        padding: 0.5rem;
+    }
+}
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.insight-content h4 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.insight-content p {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Predictive Modeling */
+.prediction-chart {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.prediction-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.prediction-metric {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    border-left: 4px solid #27ae60;
+}
+
+.prediction-metric h5 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.prediction-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #27ae60;
+    margin-bottom: 0.2rem;
+}
+
+.prediction-change {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+}
+
+/* Responsive Adjustments for Smart Calculator */
+@media (max-width: 768px) {
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .score-display {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .solution-metrics {
+        grid-template-columns: 1fr;
+    }
+    
+    .ai-actions {
+        flex-direction: column;
+    }
+    
+    .recommendations-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .insights-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .scenario-charts {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* ============================================= */
+/* COMPREHENSIVE DARK MODE STYLES FOR ALL SECTIONS */
+/* ============================================= */
+
+/* Base Dark Mode */
+body.dark-theme {
+    background-color: #1a1d23;
+    color: #ecf0f1;
+}
+
+
+/* Container and Main Content */
+body.dark-theme .main-content {
+    background-color: #1a1d23;
+}
+
+/* Header */
+body.dark-theme .main-header {
+    background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+}
+
+/* Ensure header text remains white in dark theme */
+body.dark-theme .main-header,
+body.dark-theme .main-header *,
+body.dark-theme .header-stats,
+body.dark-theme .header-stats *,
+body.dark-theme .stat-item,
+body.dark-theme .stat-item span,
+body.dark-theme .stat-item strong,
+body.dark-theme #total-mines,
+body.dark-theme .title-section h1,
+body.dark-theme .title-section p {
+    color: #ffffff !important;
+    transition: none !important;
+}
+
+body.dark-theme .header-stats i,
+body.dark-theme .stat-item i {
+    color: #27ae60 !important;
+    transition: none !important;
+}
+
+/* Navigation */
+body.dark-theme .main-nav {
+    background-color: #2c3e50;
+    border-bottom: 3px solid #27ae60;
+}
+
+body.dark-theme .nav-link {
+    color: #bdc3c7;
+}
+
+body.dark-theme .nav-link:hover,
+body.dark-theme .nav-link.active {
+    color: #27ae60;
+    background-color: rgba(52, 73, 94, 0.5);
+}
+
+/* Section Headers */
+body.dark-theme .section-header h2 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .section-header p {
+    color: #95a5a6;
+}
+
+/* Dashboard Cards */
+body.dark-theme .dashboard-card {
+    background: #2c3e50;
+    color: #ecf0f1;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+body.dark-theme .card-header h3 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .metric-value {
+    color: #ecf0f1;
+}
+
+body.dark-theme .metric-unit {
+    color: #95a5a6;
+}
+
+body.dark-theme .metric-change {
+    color: #ecf0f1;
+}
+
+/* Form Elements - All Sections */
+body.dark-theme .mine-info-form,
+body.dark-theme .emissions-calculator,
+body.dark-theme .existing-sinks,
+body.dark-theme .afforestation-planning,
+body.dark-theme .pathway-simulator,
+body.dark-theme .report-generator,
+body.dark-theme .optimization-solver,
+body.dark-theme .predictive-modeling {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme h3,
+body.dark-theme h4,
+body.dark-theme h5 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .activity-section {
+    background: #34495e;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+body.dark-theme .strategy-section {
+    background: #34495e;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* All Form Inputs and Labels */
+body.dark-theme label {
+    color: #ecf0f1;
+}
+
+body.dark-theme input[type="text"],
+body.dark-theme input[type="number"],
+body.dark-theme input[type="email"],
+body.dark-theme input[type="password"],
+body.dark-theme input[type="date"],
+body.dark-theme input[type="time"],
+body.dark-theme input[type="range"],
+body.dark-theme select,
+body.dark-theme textarea {
+    background: #1a252f;
+    color: #ecf0f1;
+    border: 1px solid #34495e;
+}
+
+body.dark-theme input::placeholder,
+body.dark-theme textarea::placeholder {
+    color: #7f8c8d;
+}
+
+body.dark-theme input:focus,
+body.dark-theme select:focus,
+body.dark-theme textarea:focus {
+    border-color: #27ae60;
+    background: #1a252f;
+    color: #ecf0f1;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+}
+
+/* Range Sliders */
+body.dark-theme .range-value {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+/* Results Sections */
+body.dark-theme .results-section,
+body.dark-theme .simulation-results,
+body.dark-theme .optimization-results,
+body.dark-theme .prediction-results {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-theme .result-card {
+    background: #2c3e50;
+    color: #ecf0f1;
+    border: 1px solid #34495e;
+}
+
+body.dark-theme .result-card.highlight {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    border: 2px solid #27ae60;
+}
+
+body.dark-theme .result-value {
+    color: #27ae60;
+}
+
+body.dark-theme .result-unit {
+    color: #95a5a6;
+}
+
+body.dark-theme .result-percentage {
+    color: #3498db;
+}
+
+/* Charts Container */
+body.dark-theme .chart-container {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme .dashboard-charts .chart-container h3 {
+    color: #ecf0f1;
+}
+
+/* Buttons */
+body.dark-theme .btn,
+body.dark-theme .btn-primary,
+body.dark-theme .btn-secondary {
+    background: #27ae60;
+    color: white;
+    border: 1px solid #27ae60;
+}
+
+body.dark-theme .btn:hover,
+body.dark-theme .btn-primary:hover {
+    background: #2ecc71;
+    border-color: #2ecc71;
+}
+
+body.dark-theme .btn-secondary {
+    background: #34495e;
+    border-color: #34495e;
+}
+
+body.dark-theme .btn-secondary:hover {
+    background: #2c3e50;
+    border-color: #2c3e50;
+}
+
+/* Tables - All Sections */
+body.dark-theme table {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme th {
+    background: #1a252f;
+    color: #ecf0f1;
+    border-bottom: 2px solid #34495e;
+}
+
+body.dark-theme td {
+    color: #ecf0f1;
+    border-bottom: 1px solid #34495e;
+}
+
+body.dark-theme tr:hover {
+    background: #34495e;
+}
+
+/* Compliance Section */
+body.dark-theme .compliance-section {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme .compliance-item {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-theme .compliance-details h4 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .compliance-details p {
+    color: #bdc3c7;
+}
+
+/* Smart Calculator Section */
+body.dark-theme .smart-calculator-container {
+    color: #ecf0f1;
+}
+
+body.dark-theme .ai-analysis-card,
+body.dark-theme .recommendations-panel,
+body.dark-theme .optimization-solver,
+body.dark-theme .scenario-comparison,
+body.dark-theme .smart-insights,
+body.dark-theme .predictive-modeling {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme .analysis-item,
+body.dark-theme .recommendation-card,
+body.dark-theme .insight-card {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-theme .score-circle {
+    background: #34495e;
+    border: 3px solid #27ae60;
+}
+
+body.dark-theme .score-value,
+body.dark-theme .score-label {
+    color: #ecf0f1;
+}
+
+body.dark-theme .score-bar {
+    background: #1a252f;
+}
+
+body.dark-theme .score-category,
+body.dark-theme .score-points {
+    color: #ecf0f1;
+}
+
+/* Recommendations */
+body.dark-theme .recommendation-title {
+    color: #ecf0f1;
+}
+
+body.dark-theme .recommendation-content {
+    color: #bdc3c7;
+}
+
+body.dark-theme .recommendation-metric {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+/* Roadmap */
+body.dark-theme .roadmap-content {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-theme .roadmap-title {
+    color: #ecf0f1;
+}
+
+body.dark-theme .roadmap-details {
+    color: #bdc3c7;
+}
+
+/* Footer */
+body.dark-theme .main-footer {
+    background: #1a252f;
+    color: #ecf0f1;
+}
+
+body.dark-theme .footer-section h4 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .footer-section p,
+body.dark-theme .footer-section ul li a {
+    color: #95a5a6;
+}
+
+body.dark-theme .footer-section ul li a:hover {
+    color: #27ae60;
+}
+
+/* State Afforestation Rates */
+body.dark-theme .state-afforestation-rates {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-theme .rates-grid {
+    color: #ecf0f1;
+}
+
+body.dark-theme .rate-item {
+    background: #2c3e50;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin: 0.25rem;
+    color: #ecf0f1;
+}
+
+body.dark-theme .rate-item strong {
+    color: #27ae60;
+}
+
+/* Visualization Section */
+body.dark-theme .visualization-container {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme .chart-controls {
+    background: #34495e;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Reports Section */
+body.dark-theme .reports-container {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme .report-generator {
+    background: #34495e;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+/* Progress Bars */
+body.dark-theme .progress-bar {
+    background: #1a252f;
+}
+
+body.dark-theme .neutrality-progress {
+    color: #ecf0f1;
+}
+
+body.dark-theme #neutrality-percentage {
+    color: #95a5a6;
+}
+
+/* Info Messages */
+body.dark-theme .info,
+body.dark-theme .alert,
+body.dark-theme .warning {
+    background: #34495e;
+    color: #ecf0f1;
+    border: 1px solid #2c3e50;
+}
+
+/* Dropdown Options */
+body.dark-theme select option {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+/* Scrollbars for Dark Mode */
+body.dark-theme ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+    background: #1a252f;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb {
+    background: #34495e;
+    border-radius: 6px;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: #2c3e50;
+}
+
+/* Loading Spinners */
+body.dark-theme .loading,
+body.dark-theme .status-indicator.loading {
+    border-color: rgba(39, 174, 96, 0.3);
+    border-top-color: #27ae60;
+}
+
+/* Specific Mine Map Section Styles */
+
+/* Fix for specific text elements that might still have issues */
+body.dark-theme p,
+body.dark-theme span,
+body.dark-theme div,
+body.dark-theme li,
+body.dark-theme a {
+    color: inherit;
+}
+
+/* Ensure all text in cards is visible */
+body.dark-theme .card-content,
+body.dark-theme .card-content * {
+    color: #ecf0f1;
+}
+
+/* Fix for any remaining form group labels and values */
+body.dark-theme .form-group label,
+body.dark-theme .form-group span,
+body.dark-theme .form-group div {
+    color: #ecf0f1;
+}
+
+/* Fix for calculator sections */
+body.dark-theme .calculator-container,
+body.dark-theme .calculator-container * {
+    color: #ecf0f1;
+}
+
+body.dark-theme .sinks-container,
+body.dark-theme .sinks-container * {
+    color: #ecf0f1;
+}
+
+body.dark-theme .pathways-container,
+body.dark-theme .pathways-container * {
+    color: #ecf0f1;
+}
+
+/* Fix for any status text */
+body.dark-theme .status,
+body.dark-theme .status-text,
+body.dark-theme .status-indicator {
+    color: #ecf0f1;
+}
+
+/* Fix metric displays */
+body.dark-theme .metric-display,
+body.dark-theme .metric-item,
+body.dark-theme .metric-label,
+body.dark-theme .metric-value {
+    color: #ecf0f1;
+}
+
+/* Ensure icons remain visible */
+body.dark-theme i.fas,
+body.dark-theme i.far,
+body.dark-theme i.fab {
+    color: inherit;
+}
+
+body.dark-theme .card-header i {
+    color: #27ae60;
+}
+
+/* Fix for analysis content */
+body.dark-theme .analysis-content,
+body.dark-theme .analysis-content * {
+    color: #ecf0f1;
+}
+
+/* Fix for solution cards */
+body.dark-theme .solution-card,
+body.dark-theme .solution-summary,
+body.dark-theme .solution-metrics {
+    color: #ecf0f1;
+}
+
+body.dark-theme .metric-item .metric-label {
+    color: #95a5a6;
+}
+
+body.dark-theme .metric-item .metric-value {
+    color: #27ae60;
+}
+
+/* Ensure no text becomes invisible */
+body.dark-theme *:not(input):not(select):not(textarea) {
+    color: inherit;
+    min-color: #7f8c8d; /* Fallback minimum visibility */
+}
+
+/* Special handling for nested elements */
+body.dark-theme .form-grid *,
+body.dark-theme .results-grid *,
+body.dark-theme .stats-grid *,
+body.dark-theme .rates-grid *,
+body.dark-theme .compliance-grid *,
+body.dark-theme .insights-grid *,
+body.dark-theme .recommendations-grid * {
+    color: inherit;
+}
+
+/* Ensure paragraph text is always readable */
+body.dark-theme p {
+    color: #bdc3c7;
+}
+
+body.dark-theme strong,
+body.dark-theme b {
+    color: #ecf0f1;
+}
+
+/* Fix for any description text */
+body.dark-theme .description,
+body.dark-theme .details,
+body.dark-theme .info-text {
+    color: #95a5a6;
+}
+
+/* Ensure hover states work properly */
+body.dark-theme *:hover {
+    transition: all 0.3s ease;
+}
+
+/* Remove any conflicting styles */
+body.dark-theme * {
+    text-shadow: none !important;
+}
+
+/* Specific fixes for problematic sections */
+body.dark-theme #emission-results *,
+body.dark-theme #pathway-results *,
+body.dark-theme #sinks-results *,
+body.dark-theme #optimization-results *,
+body.dark-theme #prediction-results *,
+body.dark-theme #recommendations-panel *,
+body.dark-theme #scenario-comparison * {
+    color: inherit;
+}
+
+/* Force visibility for important text */
+body.dark-theme h1, 
+body.dark-theme h2, 
+body.dark-theme h3, 
+body.dark-theme h4, 
+body.dark-theme h5, 
+body.dark-theme h6 {
+    color: #ecf0f1 !important;
+}
+
+/* Ensure form labels are always visible */
+body.dark-theme label {
+    color: #ecf0f1 !important;
+    font-weight: 500;
+}
+
+/* ============================================= */
+/* OPTIMIZATION SOLVER RESULTS - LIGHT & DARK THEME */
+/* ============================================= */
+
+/* Light Theme Styles for Optimization Results */
+.optimization-results {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+.optimization-results h4 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 0.5rem;
+}
+
+.optimization-results h5 {
+    color: #34495e;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.solution-summary {
+    margin-bottom: 2rem;
+}
+
+.solution-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.solution-card.highlight {
+    border: 2px solid #27ae60;
+    background: linear-gradient(135deg, #f8f9fa, white);
+}
+
+.solution-card h5 {
+    color: #2c3e50;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.solution-card #recommended-strategy {
+    color: #34495e;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.solution-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.solution-metrics .metric-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 3px solid #27ae60;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.solution-metrics .metric-label {
+    display: block;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.solution-metrics .metric-value {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #27ae60;
+}
+
+.implementation-roadmap {
+    margin-top: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.implementation-roadmap h5 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.roadmap-timeline {
+    color: #34495e;
+    line-height: 1.8;
+}
+
+/* Dark Theme Specific Overrides for Optimization Results */
+body.dark-theme .optimization-results {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme .optimization-results h4 {
+    color: #ecf0f1;
+    border-bottom-color: #27ae60;
+}
+
+body.dark-theme .optimization-results h5 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .solution-card {
+    background: #34495e;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+body.dark-theme .solution-card.highlight {
+    border-color: #27ae60;
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+}
+
+body.dark-theme .solution-card h5 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .solution-card #recommended-strategy {
+    color: #bdc3c7;
+}
+
+body.dark-theme .solution-metrics .metric-item {
+    background: #1a252f;
+    border-left-color: #27ae60;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+body.dark-theme .solution-metrics .metric-label {
+    color: #95a5a6;
+}
+
+body.dark-theme .solution-metrics .metric-value {
+    color: #27ae60;
+}
+
+body.dark-theme .implementation-roadmap {
+    background: #34495e;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+body.dark-theme .implementation-roadmap h5 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .roadmap-timeline {
+    color: #bdc3c7;
+}
+
+/* Ensure all text in optimization results is visible */
+body.dark-theme #optimization-results,
+body.dark-theme #optimization-results * {
+    color: inherit;
+}
+
+body.dark-theme #recommended-strategy,
+body.dark-theme #total-investment,
+body.dark-theme #annual-savings,
+body.dark-theme #emission-reduction-opt,
+body.dark-theme #payback-period,
+body.dark-theme #roi-percentage {
+    color: #27ae60 !important;
+    font-weight: bold;
+}
+
+body.dark-theme #roadmap-timeline,
+body.dark-theme #roadmap-timeline * {
+    color: #bdc3c7 !important;
+}
+
+/* Scenario Comparison Styles */
+.scenario-comparison {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+body.dark-theme .scenario-comparison {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme .scenario-comparison h3 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .comparison-table {
+    background: #34495e;
+}
+
+body.dark-theme .comparison-table th {
+    background: #1a252f;
+    color: #ecf0f1;
+}
+
+body.dark-theme .comparison-table td {
+    color: #bdc3c7;
+    background: #2c3e50;
+}
+
+body.dark-theme .comparison-table tr:hover td {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+/* Smart Insights Section */
+.smart-insights {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+body.dark-theme .smart-insights {
+    background: #2c3e50;
+}
+
+body.dark-theme .smart-insights h3 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .insight-content h4 {
+    color: #ecf0f1 !important;
+}
+
+body.dark-theme .insight-content p {
+    color: #bdc3c7 !important;
+}
+
+body.dark-theme #industry-benchmark,
+body.dark-theme #performance-trend,
+body.dark-theme #achievement-potential,
+body.dark-theme #risk-assessment {
+    color: #bdc3c7 !important;
+}
+
+/* Ensure visibility of dynamically added content */
+body.dark-theme .optimization-results *:not(button) {
+    color: inherit;
+    min-color: #7f8c8d;
+}
+
+/* Fix for any nested divs in optimization results */
+body.dark-theme .optimization-results div,
+body.dark-theme .optimization-results span,
+body.dark-theme .optimization-results p {
+    color: inherit;
+}
+
+/* Make sure highlight elements stay visible */
+body.dark-theme .highlight,
+body.dark-theme .highlight * {
+    color: #ecf0f1 !important;
+}
+
+/* ============================================= */
+/* COMPREHENSIVE TEXT VISIBILITY SYSTEM */
+/* ============================================= */
+
+/* Light Theme Base Colors */
+body:not(.dark-theme) {
+    --text-primary: #2c3e50;
+    --text-secondary: #34495e;
+    --text-muted: #7f8c8d;
+    --text-light: #95a5a6;
+    --text-accent: #27ae60;
+    --text-white: #ffffff;
+}
+
+/* Dark Theme Base Colors */
+body.dark-theme {
+    --text-primary: #ecf0f1;
+    --text-secondary: #bdc3c7;
+    --text-muted: #95a5a6;
+    --text-light: #7f8c8d;
+    --text-accent: #27ae60;
+    --text-white: #ffffff;
+}
+
+/* Apply CSS variables to elements */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+}
+
+p, span, div, li {
+    color: var(--text-secondary);
+}
+
+label {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Special elements that should always use accent color */
+.metric-value,
+.result-value,
+.score-value {
+    color: var(--text-accent) !important;
+}
+
+/* Header should always be white */
+.main-header,
+.main-header * {
+    color: #ffffff !important;
+    transition: none !important; /* No transition for header text */
+}
+
+/* Specifically target header stats to prevent fluctuation */
+.header-stats,
+.header-stats *,
+.stat-item,
+.stat-item span,
+.stat-item strong,
+#total-mines {
+    color: #ffffff !important;
+    transition: none !important;
+}
+
+/* Header title and subtitle should also stay white */
+.title-section h1,
+.title-section p {
+    color: #ffffff !important;
+    transition: none !important;
+}
+
+/* Icons in header stats stay green */
+.header-stats i,
+.stat-item i {
+    color: #27ae60 !important;
+    transition: none !important;
+}
+
+/* Override any inherited color properties for header stats */
+.header-stats span,
+.header-stats strong,
+.stat-item > span,
+.stat-item span strong,
+#total-mines {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    transition: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+}
+
+/* Ensure header background can transition but text cannot */
+.main-header {
+    transition: background var(--transition-speed) var(--transition-ease) !important;
+}
+
+.main-header * {
+    transition-property: background-color, border-color, box-shadow, transform !important;
+    transition-duration: var(--transition-speed) !important;
+    transition-timing-function: var(--transition-ease) !important;
+    /* Explicitly exclude color from transitions */
+}
+
+/* Light theme header text (same as dark) */
+body:not(.dark-theme) .header-stats,
+body:not(.dark-theme) .header-stats *,
+body:not(.dark-theme) .stat-item,
+body:not(.dark-theme) .stat-item span,
+body:not(.dark-theme) .stat-item strong,
+body:not(.dark-theme) #total-mines {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Ensure header content is always visible */
+body:not(.dark-theme) .title-section h1,
+body:not(.dark-theme) .title-section p {
+    color: #ffffff !important;
+    opacity: 1 !important;
+}
+
+/* Force white text in header for both themes */
+.main-header .header-stats,
+.main-header .stat-item,
+.main-header .stat-item span,
+.main-header .stat-item strong {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Add subtle shadow for better visibility */
+}
+
+/* === FINAL HEADER VISIBILITY FIX === */
+/* Ensure header always has dark background and white text in BOTH themes */
+.main-header {
+    /* Dark gradient background for both themes */
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+    /* Fallback solid color */
+    background-color: #2c3e50 !important;
+}
+
+/* All header text must be white */
+.main-header,
+.main-header .container,
+.main-header .header-content,
+.main-header .logo-section,
+.main-header .title-section,
+.main-header .title-section h1,
+.main-header .title-section p,
+.main-header .header-stats,
+.main-header .stat-item,
+.main-header .stat-item span,
+.main-header .stat-item strong,
+.main-header #total-mines {
+    color: #ffffff !important;
+}
+
+/* Icons stay green */
+.main-header .stat-item i {
+    color: #27ae60 !important;
+}
+
+/* Remove any possible color overrides */
+body .main-header *,
+body.dark-theme .main-header *,
+body:not(.dark-theme) .main-header * {
+    /* All text in header is white except icons */
+    color: #ffffff !important;
+}
+
+body .main-header i,
+body.dark-theme .main-header i,
+body:not(.dark-theme) .main-header i {
+    /* Icons remain green */
+    color: #27ae60 !important;
+}
+
+/* Forms and inputs */
+input, select, textarea {
+    color: var(--text-primary);
+}
+
+body.dark-theme input,
+body.dark-theme select,
+body.dark-theme textarea {
+    background: #1a252f;
+    color: #ecf0f1;
+    border-color: #34495e;
+}
+
+/* Tables */
+table {
+    color: var(--text-primary);
+}
+
+th {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+td {
+    color: var(--text-secondary);
+}
+
+body.dark-theme table {
+    background: #2c3e50;
+}
+
+body.dark-theme th {
+    background: #1a252f;
+    color: #ecf0f1;
+}
+
+body.dark-theme td {
+    color: #bdc3c7;
+}
+
+/* Cards and containers */
+.dashboard-card,
+.result-card,
+.solution-card,
+.recommendation-card,
+.insight-card {
+    color: var(--text-primary);
+}
+
+body.dark-theme .dashboard-card,
+body.dark-theme .result-card,
+body.dark-theme .solution-card,
+body.dark-theme .recommendation-card,
+body.dark-theme .insight-card {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+/* Ensure units and descriptions are visible */
+.metric-unit,
+.result-unit,
+.description,
+.details {
+    color: var(--text-muted);
+}
+
+/* Buttons should maintain their colors */
+.btn, button {
+    transition: background-color var(--transition-speed) var(--transition-ease),
+                transform 0.2s ease;
+}
+
+/* Navigation links */
+.nav-link {
+    color: #555;
+    transition: color var(--transition-speed) var(--transition-ease),
+                background-color var(--transition-speed) var(--transition-ease);
+}
+
+body.dark-theme .nav-link {
+    color: #bdc3c7;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #27ae60;
+}
+
+body.dark-theme .nav-link:hover,
+body.dark-theme .nav-link.active {
+    color: #27ae60;
+}
+
+/* Footer text */
+.main-footer {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .main-footer {
+    background: #1a252f;
+    color: #95a5a6;
+}
+
+/* Icons should inherit color from their parent */
+i.fas, i.far, i.fab {
+    color: inherit;
+    transition: color var(--transition-speed) var(--transition-ease);
+}
+
+/* Special icon colors */
+.card-header i,
+.stat-item i {
+    color: #27ae60;
+}
+
+/* Prevent white text on white background issues */
+body:not(.dark-theme) .text-white {
+    color: #2c3e50 !important;
+}
+
+body.dark-theme .text-white {
+    color: #ecf0f1 !important;
+}
+
+/* Ensure form labels are always visible */
+body:not(.dark-theme) label {
+    color: #2c3e50;
+}
+
+body.dark-theme label {
+    color: #ecf0f1;
+}
+
+/* Fix for specific sections that might have issues */
+.emissions-calculator,
+.sinks-container,
+.pathways-container,
+.visualization-container,
+.smart-calculator-container,
+.reports-container,
+.map-container {
+    color: var(--text-primary);
+}
+
+body.dark-theme .emissions-calculator,
+body.dark-theme .sinks-container,
+body.dark-theme .pathways-container,
+body.dark-theme .visualization-container,
+body.dark-theme .smart-calculator-container,
+body.dark-theme .reports-container,
+body.dark-theme .map-container {
+    color: #ecf0f1;
+}
+
+/* Ensure all text in results sections is visible */
+.results-section,
+.simulation-results,
+.optimization-results,
+.prediction-results {
+    color: var(--text-primary);
+}
+
+body.dark-theme .results-section,
+body.dark-theme .simulation-results,
+body.dark-theme .optimization-results,
+body.dark-theme .prediction-results {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+/* Progress bars and indicators */
+.progress-bar {
+    background: rgba(0, 0, 0, 0.1);
+    transition: background-color var(--transition-speed) var(--transition-ease);
+}
+
+body.dark-theme .progress-bar {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure chart labels are visible */
+.chart-container {
+    color: var(--text-primary);
+}
+
+body.dark-theme .chart-container {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+/* Loading indicators */
+.loading,
+.spinner {
+    border-color: rgba(39, 174, 96, 0.3);
+    border-top-color: #27ae60;
+}
+
+/* Ensure all dynamically added content is visible */
+body.dark-theme [id],
+body.dark-theme [class] {
+    color: inherit;
+}
+
+/* Override any inline styles that might cause issues */
+body.dark-theme *[style*="color"] {
+    color: inherit !important;
+}
+
+/* Smooth theme transition without text jumping */
+body {
+    transition: background-color var(--transition-speed) var(--transition-ease);
+}
+
+body * {
+    transition-timing-function: var(--transition-ease);
+    transition-duration: var(--transition-speed);
+}
+
+/* Solver Options and Controls Styling */
+.optimization-solver {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.optimization-solver h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 0.5rem;
+}
+
+.solver-options {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.solver-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* Dark Theme for Optimization Solver */
+body.dark-theme .optimization-solver {
+    background: #2c3e50;
+    color: #ecf0f1;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+body.dark-theme .optimization-solver h3 {
+    color: #ecf0f1;
+    border-bottom-color: #27ae60;
+}
+
+body.dark-theme .solver-options {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-theme .solver-options .form-group label {
+    color: #ecf0f1 !important;
+}
+
+body.dark-theme .solver-options select,
+body.dark-theme .solver-options input {
+    background: #1a252f !important;
+    color: #ecf0f1 !important;
+    border: 1px solid #34495e !important;
+}
+
+body.dark-theme .solver-options select:focus,
+body.dark-theme .solver-options input:focus {
+    border-color: #27ae60 !important;
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2) !important;
+}
+
+body.dark-theme .solver-options select option {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme select#priority-areas option:checked {
+    background: #27ae60;
+    color: white;
+}
+
+/* Ensure all dynamically generated content is visible */
+body.dark-theme .optimization-results [id*="-"],
+body.dark-theme .optimization-results [class*="-value"],
+body.dark-theme .optimization-results [class*="-label"] {
+    color: inherit !important;
+}
+
+/* Special handling for roadmap timeline items */
+.roadmap-timeline-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    background: white;
+    border-radius: 6px;
+    border-left: 3px solid #27ae60;
+}
+
+body.dark-theme .roadmap-timeline-item {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+.roadmap-timeline-item .timeline-marker {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #27ae60;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-weight: bold;
+}
+
+.roadmap-timeline-item .timeline-content {
+    flex: 1;
+}
+
+.roadmap-timeline-item .timeline-title {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.3rem;
+}
+
+body.dark-theme .roadmap-timeline-item .timeline-title {
+    color: #ecf0f1;
+}
+
+.roadmap-timeline-item .timeline-description {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+body.dark-theme .roadmap-timeline-item .timeline-description {
+    color: #95a5a6;
+}
+
+/* Fix for any remaining text visibility issues in optimization */
+body.dark-theme .optimization-solver *,
+body.dark-theme .optimization-results *,
+body.dark-theme .scenario-comparison *,
+body.dark-theme .smart-insights * {
+    /* Ensure minimum contrast */
+    opacity: 1 !important;
+}
+
+/* Explicit fix for result values to ensure they're always visible */
+body.dark-theme .optimization-results .metric-value {
+    color: #27ae60 !important;
+    text-shadow: 0 0 1px rgba(39, 174, 96, 0.3);
+}
+
+body.dark-theme .optimization-results .metric-label {
+    color: #95a5a6 !important;
+}
+
+/* Light theme optimization for consistency */
+.optimization-results .metric-value {
+    color: #27ae60;
+    font-weight: 700;
+}
+
+.optimization-results .metric-label {
+    color: #7f8c8d;
+    font-weight: 500;
+}
+body.dark-theme .map-container {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme .control-panel,
+body.dark-theme .map-statistics {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-theme .control-panel h3,
+body.dark-theme .map-statistics h3 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .stat-item {
+    background: #2c3e50;
+    border: 1px solid #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-theme .stat-label {
+    color: #bdc3c7;
+}
+
+body.dark-theme .stat-value {
+    color: #27ae60;
+}
+
+body.dark-theme .stat-unit {
+    color: #95a5a6;
+}
+
+/* Dark mode for mines list and table */
+body.dark-theme .mines-list {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-theme .mines-list h3 {
+    color: #ecf0f1;
+}
+
+body.dark-theme .mines-table {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-theme .mines-table th {
+    background: #1a252f;
+    color: #ecf0f1;
+    border-bottom: 1px solid #34495e;
+}
+
+body.dark-theme .mines-table td {
+    color: #ecf0f1;
+    border-bottom: 1px solid #34495e;
+}
+
+body.dark-theme .mines-table tr:hover {
+    background: #34495e;
+}
+
+body.dark-theme .mines-table tr:hover td {
+    color: #ecf0f1;
+}
+
+/* Dark mode for map legend */
+body.dark-theme .map-legend {
+    background: #2c3e50;
+    border: 2px solid #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-theme .map-legend h4 {
+    color: #ecf0f1;
+    border-bottom: 1px solid #34495e;
+}
+
+body.dark-theme .legend-item {
+    color: #ecf0f1;
+}
+
+/* Dark mode for form elements in map section */
+body.dark-theme #map-search,
+body.dark-theme #map-filter-state,
+body.dark-theme #map-filter-type {
+    background: #34495e;
+    color: #ecf0f1;
+    border: 1px solid #2c3e50;
+}
+
+body.dark-theme #map-search::placeholder {
+    color: #95a5a6;
+}
+
+/* Dark mode for buttons in map section */
+body.dark-theme .map-actions .btn,
+body.dark-theme .map-actions .btn-primary,
+body.dark-theme .map-actions .btn-secondary {
+    background: #27ae60;
+    color: white;
+    border: none;
+}
+
+body.dark-theme .map-actions .btn:hover,
+body.dark-theme .map-actions .btn-primary:hover,
+body.dark-theme .map-actions .btn-secondary:hover {
+    background: #2ecc71;
+}
+
+/* Ensure table action buttons remain visible */
+body.dark-theme .mines-table .btn-small {
+    background: #27ae60;
+    color: white;
+    border: 1px solid #27ae60;
+}
+
+body.dark-theme .mines-table .btn-small:hover {
+    background: #2ecc71;
+    border-color: #2ecc71;
+}
+
+/* Dark mode for general form inputs */
+body.dark-theme input[type="text"],
+body.dark-theme input[type="number"],
+body.dark-theme select,
+body.dark-theme textarea {
+    background: #34495e;
+    color: #ecf0f1;
+    border: 1px solid #2c3e50;
+}
+
+body.dark-theme input[type="text"]::placeholder,
+body.dark-theme input[type="number"]::placeholder,
+body.dark-theme textarea::placeholder {
+    color: #95a5a6;
+}
+
+body.dark-theme input[type="text"]:focus,
+body.dark-theme input[type="number"]:focus,
+body.dark-theme select:focus,
+body.dark-theme textarea:focus {
+    border-color: #27ae60;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+}
+
+/* Dark mode for labels */
+body.dark-theme label {
+    color: #ecf0f1;
+}
+
+/* Fix for dark mode theme toggle button */
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #27ae60;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    background: #2ecc71;
+}
+
+.theme-toggle.dark {
+    background: #34495e;
+}
+
+.theme-toggle.dark:hover {
+    background: #2c3e50;
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Print Styles */
+@media print {
+    .main-header,
+    .main-nav,
+    .main-footer {
+        display: none;
+    }
+    
+    .main-content {
+        padding: 0;
+    }
+    
+    .dashboard-card,
+    .chart-container {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
